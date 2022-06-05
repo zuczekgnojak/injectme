@@ -23,3 +23,6 @@ __all__ = [
     "InjectionFailure",
     "InjectmeException",
 ]
+
+__version__ = "0.0.1"
+
