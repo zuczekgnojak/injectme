@@ -1,3 +1,5 @@
+from typing import Optional
+
 from .errors import (
     DependencyNotFound,
     InjectionFailure,
@@ -7,17 +9,40 @@ from .registry import DependenciesRegistry
 
 
 class Injector:
-    def __init__(self, registry=None):
+    """
+    Class responsible for the injection of dependencies.
+    """
+    def __init__(self, registry: Optional[DependenciesRegistry] = None):
+        """
+        Initialize the Injector.
+
+        :param registry: dependencies registry
+            to be used with this ``Injector`` instance. If not sepcified,
+            an instance of registry will be created automatically.
+        """
         if registry is None:
             registry = DependenciesRegistry()
 
         self._registry = registry
 
     @property
-    def registry(self):
+    def registry(self) -> DependenciesRegistry:
+        """
+        Dependencies registry associated with this ``Injector``.
+
+        :return: instance of registry.
+        """
         return self._registry
 
-    def __call__(self, cls):
+    def __call__(self, cls: type) -> type:
+        """
+        Mark class to be the target of injection performed with this instance of ``Injector``.
+
+        :param cls: class to be marked for injection.
+        :raises InjectionFailure: raised if any of the required dependencies can't be found in
+            the registry associated with this ``Injector``.
+        :return: class passed as a param.
+        """
         if not isinstance(cls, type):
             raise InjectionNotSupported(cls)
 

@@ -13,7 +13,7 @@ from .example_dep import DependencyA, FactoryA
 
 class TestSimpleAPI(unittest.TestCase):
     def setUp(self):
-        inject.registry.clear()
+        clear_dependencies()
 
     def test_instance_injection(self):
         @inject

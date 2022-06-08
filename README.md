@@ -45,6 +45,6 @@ I'm useful
 
 ## Links
 
-- docs: https://github.com/zuczekgnojak/injectme
+- docs: https://injectme.readthedocs.io
 - pypi: https://pypi.org/project/injectme
 - code: https://github.com/zuczekgnojak/injectme
