@@ -6,6 +6,8 @@ from injectme import (
     register,
     register_factory,
     set_registry,
+    clear_dependencies,
+    DependencyNotFound,
 )
 from injectme.global_registry import _get_current_global_registry, _reset_registry
 
@@ -49,3 +51,15 @@ class TestGlobalRegistry(unittest.TestCase):
         registry = get_registry()
         result = registry.get(Dependency)
         self.assertIs(factory.instance, result)
+
+    def test_clearing_global_registry(self):
+        instance = Dependency()
+        register(Dependency, instance)
+
+        registry = get_registry()
+        result = registry.get(Dependency)
+        self.assertIs(instance, result)
+
+        clear_dependencies()
+        with self.assertRaises(DependencyNotFound):
+            registry.get(Dependency)

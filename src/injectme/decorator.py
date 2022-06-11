@@ -6,23 +6,15 @@ from .errors import InjectionFailure, InjectionNotSupported, DependencyNotFound
 def inject(target):
     if isinstance(target, DependenciesRegistry):
         registry = target
-        return _inject_local_registry(registry)
+        decorator = _get_cls_decorator(lambda: registry)
+        return decorator
 
     if isinstance(target, type):
         cls = target
-        return _inject_global_registry(cls)
+        decorator = _get_cls_decorator(get_global_registry)
+        return decorator(cls)
 
     raise InjectionNotSupported(target)
-
-
-def _inject_local_registry(registry: DependenciesRegistry):
-    get_registry = lambda: registry
-    return _get_cls_decorator(get_registry)
-
-
-def _inject_global_registry(cls: type):
-    cls_decorator = _get_cls_decorator(get_global_registry)
-    return cls_decorator(cls)
 
 
 def _get_cls_decorator(get_registry):

@@ -54,6 +54,9 @@ class DependenciesRegistry:
         entry = RegistryEntry.factory(factory)
         self._dependencies[dependency] = entry
 
+    def clear(self):
+        self._dependencies = {}
+
     def _ensure_not_registered(self, dependency):
         if dependency in self._dependencies:
             raise DependencyAlreadyRegistered(dependency)

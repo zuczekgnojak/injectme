@@ -62,3 +62,15 @@ class TestRegistry(unittest.TestCase):
         registry = DependenciesRegistry()
         with self.assertRaises(DependencyNotFound):
             registry.get(Dependency)
+
+    def test_clearing_registry(self):
+        instance = Dependency()
+        registry = DependenciesRegistry()
+        registry.register_instance(Dependency, instance)
+
+        registry.get(Dependency)
+
+        registry.clear()
+
+        with self.assertRaises(DependencyNotFound):
+            registry.get(Dependency)

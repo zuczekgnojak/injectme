@@ -1,5 +1,11 @@
 from .decorator import inject
-from .global_registry import register, register_factory, set_registry, get_registry
+from .global_registry import (
+    register,
+    register_factory,
+    clear_dependencies,
+    set_registry,
+    get_registry,
+)
 from .registry import DependenciesRegistry
 from .errors import (
     DependencyNotFound,
@@ -14,6 +20,7 @@ __all__ = [
     "inject",
     "register",
     "register_factory",
+    "clear_dependencies",
     "set_registry",
     "get_registry",
     "DependenciesRegistry",
@@ -24,5 +31,5 @@ __all__ = [
     "InjectmeException",
 ]
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 

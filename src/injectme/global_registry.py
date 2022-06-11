@@ -33,3 +33,8 @@ def register(dependency, instance):
 def register_factory(dependency, factory):
     registry = get_registry()
     registry.register_factory(dependency, factory)
+
+
+def clear_dependencies():
+    registry = get_registry()
+    registry.clear()
