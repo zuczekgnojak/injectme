@@ -10,7 +10,7 @@ install:
 
 .PHONY: black
 black:
-	python3 -m black --check $(SRC)
+	python3 -m black --check --line-length=79 $(SRC)
 
 .PHONY: flake8
 flake8:
