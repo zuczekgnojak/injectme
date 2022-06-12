@@ -6,7 +6,7 @@ from injectme import (
     DependencyNotFound,
 )
 
-from .example_dep import Dependency, Factory
+from .example_dep import DependencyA as Dependency, FactoryA as Factory
 
 
 class TestRegistry(unittest.TestCase):

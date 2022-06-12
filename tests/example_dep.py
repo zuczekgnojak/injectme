@@ -1,10 +1,14 @@
-class Dependency:
+class DependencyA:
     pass
 
 
-class Factory:
+class DependencyB:
+    pass
+
+
+class FactoryA:
     def __init__(self):
-        self.instance = Dependency()
+        self.instance = DependencyA()
 
     def __call__(self):
         return self.instance
