@@ -4,7 +4,9 @@ class InjectmeException(Exception):
 
 class DependencyNotFound(InjectmeException):
     def __init__(self, dependency):
-        super().__init__(f"Dependency {dependency} has not been found in the registry")
+        super().__init__(
+            f"Dependency {dependency} has not been found in the registry"
+        )
 
 
 class DependencyAlreadyRegistered(InjectmeException):

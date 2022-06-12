@@ -28,11 +28,11 @@ class Injector:
             registry = injector.registry
 
             try:
-                for name, type in annotations.items():
-                    dependency = registry.get(type)
-                    setattr(self, name, dependency)
-            except DependencyNotFound as e:
-                raise InjectionFailure(cls) from e
+                for name, dependency in annotations.items():
+                    instance = registry.get(dependency)
+                    setattr(self, name, instance)
+            except DependencyNotFound as err:
+                raise InjectionFailure(cls) from err
 
         def injectme_init(self, *args, **kwargs):
             cls.__init_deps__(self)
