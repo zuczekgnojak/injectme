@@ -12,6 +12,7 @@ class Injector:
     """
     Class responsible for the injection of dependencies.
     """
+
     def __init__(self, registry: Optional[DependenciesRegistry] = None):
         """
         Initialize the Injector.
@@ -36,11 +37,12 @@ class Injector:
 
     def __call__(self, cls: type) -> type:
         """
-        Mark class to be the target of injection performed with this instance of ``Injector``.
+        Mark class to be the target of injection performed with this instance
+        of ``Injector``.
 
         :param cls: class to be marked for injection.
-        :raises InjectionFailure: raised if any of the required dependencies can't be found in
-            the registry associated with this ``Injector``.
+        :raises InjectionFailure: raised if any of the required dependencies
+            can't be found in the registry associated with this ``Injector``.
         :return: class passed as a param.
         """
         if not isinstance(cls, type):

@@ -35,17 +35,19 @@ class DependenciesRegistry:
     Class used as a registry of instances and factories which can be used
     for injection.
     """
+
     def __init__(self):
         self._dependencies = {}
 
     def get(self, dependency: type) -> Any:
         """
-        Get object registered as an instance of dependency or call callable registered
-        as a factory of dependency.
+        Get object registered as an instance of dependency or call callable
+        registered as a factory of dependency.
 
-        :param dependency: dependency for which a registered instance will be returned.
-        :raises DependencyNotFound: raised if the dependency passed as argument has not been
-            registered prior to making this call.
+        :param dependency: dependency for which a registered instance will be
+            returned.
+        :raises DependencyNotFound: raised if the dependency passed as argument
+            has not been registered prior to making this call.
         :return: instance of dependency.
         """
         entry = self._dependencies.get(dependency)
@@ -61,21 +63,29 @@ class DependenciesRegistry:
         """
         Register passed object as an instance of dependency.
 
-        :param dependency: dependency for which an instance should be registered.
-        :param instance: an object which should be registered as an instance of dependency
-        :raises DependencyAlreadyRegistered: raised if dependency has been already registered.
+        :param dependency: dependency for which an instance should be
+            registered.
+        :param instance: an object which should be registered as an instance of
+            dependency.
+        :raises DependencyAlreadyRegistered: raised if dependency has been
+            already registered.
         """
         self._ensure_not_registered(dependency)
         entry = RegistryEntry.instance(instance)
         self._dependencies[dependency] = entry
 
-    def register_factory(self, dependency: type, factory: Callable[[], Any]) -> None:
+    def register_factory(
+        self, dependency: type, factory: Callable[[], Any]
+    ) -> None:
         """
         Register passed callable as a factory of dependency instances.
 
-        :param dependency: dependency for which an instance should be registered.
-        :param factory: a callable which should be registered as a factory of dependency instances
-        :raises DependencyAlreadyRegistered: raised if dependency has been already registered.
+        :param dependency: dependency for which an instance should be
+            registered.
+        :param factory: a callable which should be registered as a factory of
+            dependency instances
+        :raises DependencyAlreadyRegistered: raised if dependency has been
+            already registered.
         """
         self._ensure_not_registered(dependency)
         entry = RegistryEntry.factory(factory)
