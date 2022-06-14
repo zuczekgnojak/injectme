@@ -18,33 +18,21 @@ Let's start with simple project:
 
     .
     └── src
-        ├── app.py
         ├── bootstrap.py
-        ├── cars.py
-        └── users.py
+        ├── repositories.py
+        └── services.py
 
 
 .. code-block:: python
-    :caption: Contents of src/users.py
+    :caption: Contents of src/repositories.py
 
     class UsersRepository:
-    def __init__(self, users):
-        self.users = users
+        def __init__(self, users):
+            self.users = users
 
-    def get_users(self):
-        return self.users
+        def get_users(self):
+            return self.users
 
-
-    class UsersService:
-        def __init__(self, users_repo: UsersRepository):
-            self.users_repo = users_repo
-
-        def show_users(self):
-            print(self.users_repo.get_users())
-
-
-.. code-block:: python
-    :caption: Contents of src/cars.py
 
     class CarsRepository:
         def __init__(self, cars):
@@ -52,6 +40,15 @@ Let's start with simple project:
 
         def get_cars(self):
             return self.cars
+
+
+.. code-block:: python
+    :caption: Contents of src/services.py
+
+    from .repositories import (
+        CarsRepository,
+        UsersRepository,
+    )
 
 
     class CarsService:
@@ -62,42 +59,47 @@ Let's start with simple project:
             print(self.cars_repo.get_cars())
 
 
-.. code-block:: python
-    :caption: Contents of src/app.py
+    class UsersService:
+        def __init__(self, users_repo: UsersRepository):
+            self.users_repo = users_repo
 
-    from .cars import CarsService
-    from .users import UsersService
+        def show_users(self):
+            print(self.users_repo.get_users())
 
 
-    class App:
+    class RentalService:
         def __init__(
             self,
-            cars_service: CarsService,
-            users_service: UsersService,
+            cars_repo: CarsRepository,
+            users_repo: UsersRepository,
         ):
-            self.cars_service = cars_service
-            self.users_service = users_service
+            self.cars_repo = cars_repo
+            self.users_repo = users_repo
+
+        def rent(self):
+            print(self.cars_repo.get_cars())
+            print(self.users_repo.get_users())
 
 
 .. code-block:: python
     :caption: Contents of src/bootstrap.py
 
-    from .app import App
-    from .cars import CarsRepository, CarsService
-    from .users import UsersRepository, UsersService
+    from .repositories import CarsRepository, UsersRepository
+    from .services import (
+        CarsService,
+        UsersService,
+        RentalService,
+    )
 
+    cars_repository = CarsRepository(("cara", "carb"))
+    users_repository = UsersRepository(("usera", "userb"))
 
-    def bootstrap():
-        cars_repository = CarsRepository(("cara", "carb"))
-        cars_service = CarsService(cars_repository)
-
-        users_repository = UsersRepository(("usera", "userb"))
-        users_service = UsersService(users_repository)
-
-        return App(
-            cars_service=cars_service,
-            users_service=users_service,
-        )
+    cars_service = CarsService(cars_repository)
+    users_service = UsersService(users_repository)
+    rental_service = RentalService(
+        cars_repo=cars_repository,
+        users_repo=users_repository,
+    )
 
 
 There is no much code in here so it does not look that bad. Be aware though that this
@@ -109,39 +111,14 @@ the dependency management part like this:
 
 
 .. code-block:: python
-    :caption: Contents of src/users.py
+    :caption: Contents of src/services.py
 
     from injectme import inject
 
-
-    class UsersRepository:
-        def __init__(self, users):
-            self.users = users
-
-        def get_users(self):
-            return self.users
-
-
-    @inject
-    class UsersService:
-        users_repo: UsersRepository
-
-        def show_users(self):
-            print(self.users_repo.get_users())
-
-
-.. code-block:: python
-    :caption: Contents of src/cars.py
-
-    from injectme import inject
-
-
-    class CarsRepository:
-        def __init__(self, cars):
-            self.cars = cars
-
-        def get_cars(self):
-            return self.cars
+    from .repositories import (
+        CarsRepository,
+        UsersRepository,
+    )
 
 
     @inject
@@ -152,31 +129,49 @@ the dependency management part like this:
             print(self.cars_repo.get_cars())
 
 
+    @inject
+    class UsersService:
+        users_repo: UsersRepository
+
+        def show_users(self):
+            print(self.users_repo.get_users())
+
+
+    @inject
+    class RentalService:
+        cars_repo: CarsRepository
+        users_repo: UsersRepository
+
+        def rent(self):
+            print(self.cars_repo.get_cars())
+            print(self.users_repo.get_users())
+
+
 .. code-block:: python
     :caption: Contents of src/bootstrap.py
 
     from injectme import register
 
-    from .app import App
-    from .cars import CarsRepository, CarsService
-    from .users import UsersRepository, UsersService
+    from .repositories import CarsRepository, UsersRepository
+    from .services import (
+        CarsService,
+        UsersService,
+        RentalService,
+    )
+
+    register(CarsRepository, CarsRepository(("cara", "carb")))
+    register(UsersRepository, UsersRepository(("usera", "userb")))
+
+    cars_service = CarsService()
+    users_service = UsersService()
+    rental_service = RentalService()
 
 
-    def bootstrap():
-        register(CarsRepository, CarsRepository(("cara", "carb")))
-        register(UsersRepository, UsersRepository(("usera", "userb")))
-
-        # repositories are automatically injected
-        cars_service = CarsService()
-        users_service = UsersService()
-
-        return App(
-            cars_service=cars_service,
-            users_service=users_service,
-        )
-
-
-Pay attention to the ``UsersService`` and ``CarsService`` classes. Both has been decorated with
+Pay attention to the ``*Service`` classes. All of them have been decorated with
 ``@inject`` decorator. It marks them as targets for "injection". The dependencies required by a class
-decoreated with ``@inject`` are specified as annotations (``cars_repo: CarsRepository``). Each annotation will become an attribute
+decoreated with ``@inject`` are specified as annotations (e.g. ``cars_repo: CarsRepository``). Each annotation will become an attribute
 of class's instance.
+
+.. note::
+    In the example with injectme there are no changes to the `src/repositories.py` file so it's not included. Don't get fooled by reduced
+    amount of code.
