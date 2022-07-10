@@ -58,4 +58,5 @@ Quick Example
    :maxdepth: 1
    :hidden:
 
+   guides/factories
    guides/injecting
