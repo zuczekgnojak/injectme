@@ -13,7 +13,7 @@ The :py:func:`injectme.inject` function is a shortcut for calling appropriate me
 single global :class:`Injector` instance created by injectme to provide :doc:`simple_api`.
 
 
-:py:func:`injectme.Injector` can be created using custom registry. If there's no registry
+:py:class:`injectme.Injector` can be created using custom registry. If there's no registry
 passed to :py:func:`__init__`, new instance :py:class:`injectme.DependenciesRegistry` is automatically
 created and can be reached by using :py:func:`injectme.Injector.registry` property.
 

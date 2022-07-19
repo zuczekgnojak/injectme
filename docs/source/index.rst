@@ -61,3 +61,4 @@ Quick Example
    guides/simple_api
    guides/factories
    guides/injectors
+   guides/registries
