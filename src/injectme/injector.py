@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from .errors import (
@@ -6,6 +7,8 @@ from .errors import (
     InjectionNotSupported,
 )
 from .registry import DependenciesRegistry
+
+logger = logging.getLogger(__name__)
 
 
 class Injector:
@@ -45,6 +48,7 @@ class Injector:
             can't be found in the registry associated with this ``Injector``.
         :return: class passed as a param.
         """
+        logger.debug("marking %s as target for %s", cls, self)
         if not isinstance(cls, type):
             raise InjectionNotSupported(cls)
 
@@ -53,6 +57,10 @@ class Injector:
         def __init_deps__(self):
             annotations = cls.__dict__.get("__annotations__", {})
             registry = injector.registry
+
+            logger.debug(
+                "injecting into %s by %s using %s", self, injector, registry
+            )
 
             try:
                 for name, dependency in annotations.items():

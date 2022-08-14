@@ -1,3 +1,5 @@
+import logging
+
 from .errors import (
     DependencyAlreadyRegistered,
     DependencyNotFound,
@@ -14,6 +16,9 @@ from .simple_api import (
     register_factory,
 )
 
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 __all__ = [
     "DependencyAlreadyRegistered",
