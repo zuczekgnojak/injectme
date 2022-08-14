@@ -1,8 +1,11 @@
+import logging
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Callable
 
 from .errors import DependencyNotFound, DependencyAlreadyRegistered
+
+logger = logging.getLogger(__name__)
 
 
 class DependencyType(Enum):
@@ -50,6 +53,7 @@ class DependenciesRegistry:
             has not been registered prior to making this call.
         :return: instance of dependency.
         """
+        logger.debug("looking for %s in %s", dependency, self)
         entry = self._dependencies.get(dependency)
         if entry is None:
             raise DependencyNotFound(dependency)
@@ -70,6 +74,12 @@ class DependenciesRegistry:
         :raises DependencyAlreadyRegistered: raised if dependency has been
             already registered.
         """
+        logger.debug(
+            "registering %s as %s dependency in %s",
+            instance,
+            dependency,
+            self,
+        )
         self._ensure_not_registered(dependency)
         entry = RegistryEntry.instance(instance)
         self._dependencies[dependency] = entry
@@ -87,6 +97,12 @@ class DependenciesRegistry:
         :raises DependencyAlreadyRegistered: raised if dependency has been
             already registered.
         """
+        logger.debug(
+            "registering %s as %s dependency in %s",
+            factory,
+            dependency,
+            self,
+        )
         self._ensure_not_registered(dependency)
         entry = RegistryEntry.factory(factory)
         self._dependencies[dependency] = entry
@@ -95,6 +111,7 @@ class DependenciesRegistry:
         """
         Remove all of the registered dependencies.
         """
+        logger.debug("clearing %s registry", self)
         self._dependencies = {}
 
     def _ensure_not_registered(self, dependency):
