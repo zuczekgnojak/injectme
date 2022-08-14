@@ -75,6 +75,7 @@ Example:
     clear_dependencies()
     Example()
 
+
 .. code-block:: shell
 
     $ python3 example.py
