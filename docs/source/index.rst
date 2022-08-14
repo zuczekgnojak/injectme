@@ -62,3 +62,5 @@ Quick Example
    guides/factories
    guides/injectors
    guides/registries
+   guides/inheritance
+   guides/__init__
