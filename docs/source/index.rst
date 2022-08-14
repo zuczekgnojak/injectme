@@ -51,6 +51,7 @@ Quick Example
 
    getstarted
    api
+   logging
 
 
 .. toctree::
